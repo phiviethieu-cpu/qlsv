@@ -66,9 +66,6 @@ int main(void)
         case 7:
             chucNang_CapNhatSV(&hmSV);
             break;
-        case 8:
-            chucNang_LuuFile(headLop);
-            break;
         case 0:
             chucNang_LuuFile(headLop);
             printf("Tam biet!\n");
@@ -83,7 +80,7 @@ int main(void)
             }
             return 0;
         default:
-            printf("[LOI] Lua chon khong hop le. Vui long chon lai (0-8).\n");
+            printf("[LOI] Lua chon khong hop le. Vui long chon lai (0-7).\n");
             break;
         }
     }

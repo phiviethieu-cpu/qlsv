@@ -31,7 +31,6 @@ void inMenu(void)
     printf("  5. Them sinh vien moi\n");
     printf("  6. Xoa sinh vien\n");
     printf("  7. Cap nhat thong tin sinh vien\n");
-    printf("  8. Luu du lieu ra file\n");
     printf("  0. Thoat\n");
     printf("========================================\n");
     printf("Lua chon: ");
