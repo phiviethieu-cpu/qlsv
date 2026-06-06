@@ -55,7 +55,7 @@ int main(void)
             chucNang_TimSVTheoMSSV(&hmSV);
             break;
         case 4:
-            chucNang_TimSVTheoTen(headLop);
+            chucNang_LocSVTheoGPA(headLop);
             break;
         case 5:
             chucNang_ThemSinhVien(&headLop, &tailLop, &hmLop, &hmSV);
@@ -65,6 +65,9 @@ int main(void)
             break;
         case 7:
             chucNang_CapNhatSV(&hmSV);
+            break;
+        case 8:
+            chucNang_XuatFileSVTheoLop(&hmLop);
             break;
         case 0:
             chucNang_LuuFile(headLop);
@@ -80,7 +83,7 @@ int main(void)
             }
             return 0;
         default:
-            printf("[LOI] Lua chon khong hop le. Vui long chon lai (0-7).\n");
+            printf("[LOI] Lua chon khong hop le. Vui long chon lai (0-8).\n");
             break;
         }
     }

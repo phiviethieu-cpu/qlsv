@@ -20,8 +20,8 @@ void chucNang_InSVTheoLop(HashMapLop *hmLop);
 /* 3. Tim sinh vien theo MSSV */
 void chucNang_TimSVTheoMSSV(HashMapSV *hmSV);
 
-/* 4. Tim sinh vien theo ten (duyet toan bo) */
-void chucNang_TimSVTheoTen(const Lop *headLop);
+/* 4. Loc sinh vien theo GPA */
+void chucNang_LocSVTheoGPA(const Lop *headLop);
 
 /* 5. Them sinh vien moi */
 void chucNang_ThemSinhVien(Lop **headLop, Lop **tailLop,
@@ -34,7 +34,10 @@ void chucNang_XoaSinhVien(Lop **headLop, Lop **tailLop,
 /* 7. Cap nhat thong tin sinh vien */
 void chucNang_CapNhatSV(HashMapSV *hmSV);
 
-/* 8. Luu du lieu ra file */
+/* 8. Xuat file danh sach sinh vien theo lop */
+void chucNang_XuatFileSVTheoLop(HashMapLop *hmLop);
+
+/* 9. Luu du lieu ra file */
 void chucNang_LuuFile(const Lop *headLop);
 
 #endif

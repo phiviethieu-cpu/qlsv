@@ -27,10 +27,11 @@ void inMenu(void)
     printf("  1. In toan bo danh sach lop\n");
     printf("  2. In sinh vien theo ma lop\n");
     printf("  3. Tim sinh vien theo MSSV\n");
-    printf("  4. Tim sinh vien theo ten\n");
+    printf("  4. Loc sinh vien theo GPA\n");
     printf("  5. Them sinh vien moi\n");
     printf("  6. Xoa sinh vien\n");
     printf("  7. Cap nhat thong tin sinh vien\n");
+    printf("  8. Xuat file sinh vien theo lop\n");
     printf("  0. Thoat\n");
     printf("========================================\n");
     printf("Lua chon: ");
@@ -91,40 +92,37 @@ void chucNang_TimSVTheoMSSV(HashMapSV *hmSV)
 }
 
 /* ================================================================
-   4. TIM SINH VIEN THEO TEN (duyet toan bo linked list)
+   4. LOC SINH VIEN THEO GPA
    ================================================================ */
 
-void chucNang_TimSVTheoTen(const Lop *headLop)
+void chucNang_LocSVTheoGPA(const Lop *headLop)
 {
-    char tuKhoa[100];
-    printf("Nhap ten (hoac mot phan ten) can tim: ");
-    if (scanf(" %99[^\n]", tuKhoa) != 1) { xoaBuffer(); return; }
+    float minGPA, maxGPA;
+    char buf[20];
+
+    printf("Nhap GPA toi thieu (0.00 - 4.00): ");
+    if (scanf("%19s", buf) != 1) { xoaBuffer(); return; }
     xoaBuffer();
+    if (!isValidGPA(buf, &minGPA)) return;
 
-    if (!isValidHoVaTen(tuKhoa)) return;
+    printf("Nhap GPA toi da (0.00 - 4.00): ");
+    if (scanf("%19s", buf) != 1) { xoaBuffer(); return; }
+    xoaBuffer();
+    if (!isValidGPA(buf, &maxGPA)) return;
 
-    char tuKhoa_lower[100];
-    int k;
-    for (k = 0; tuKhoa[k]; k++)
-        tuKhoa_lower[k] = (char)(tuKhoa[k] >= 'A' && tuKhoa[k] <= 'Z'
-                                  ? tuKhoa[k] + 32 : tuKhoa[k]);
-    tuKhoa_lower[k] = '\0';
+    if (minGPA > maxGPA) {
+        printf("[LOI] GPA toi thieu khong the lon hon GPA toi da.\n");
+        return;
+    }
 
     int soKetQua = 0;
-    printf("\n--- Ket qua tim kiem theo ten '%s' ---\n", tuKhoa);
+    printf("\n--- Sinh vien co GPA tu %.2f den %.2f ---\n", minGPA, maxGPA);
 
     const Lop *lop = headLop;
     while (lop) {
         const SinhVien *sv = lop->danhSachSV;
         while (sv) {
-            char ten_lower[100];
-            int j;
-            for (j = 0; sv->hoVaTen[j]; j++)
-                ten_lower[j] = (char)(sv->hoVaTen[j] >= 'A' && sv->hoVaTen[j] <= 'Z'
-                                       ? sv->hoVaTen[j] + 32 : sv->hoVaTen[j]);
-            ten_lower[j] = '\0';
-
-            if (strstr(ten_lower, tuKhoa_lower)) {
+            if (sv->gpa >= minGPA && sv->gpa <= maxGPA) {
                 inThongTinSV(sv);
                 printf("  ----------\n");
                 soKetQua++;
@@ -135,7 +133,7 @@ void chucNang_TimSVTheoTen(const Lop *headLop)
     }
 
     if (soKetQua == 0)
-        printf("[INFO] Khong tim thay sinh vien nao co ten chua '%s'.\n", tuKhoa);
+        printf("[INFO] Khong tim thay sinh vien nao trong khoang GPA [%.2f, %.2f].\n", minGPA, maxGPA);
     else
         printf("[INFO] Tim thay %d sinh vien.\n", soKetQua);
 }
@@ -385,7 +383,50 @@ void chucNang_CapNhatSV(HashMapSV *hmSV)
 }
 
 /* ================================================================
-   8. LUU DU LIEU RA FILE
+   8. XUAT FILE DANH SACH SINH VIEN THEO LOP
+   ================================================================ */
+
+void chucNang_XuatFileSVTheoLop(HashMapLop *hmLop)
+{
+    char maLop[10];
+    printf("Nhap ma lop can xuat file: ");
+    if (scanf("%9s", maLop) != 1) { xoaBuffer(); return; }
+    xoaBuffer();
+
+    Lop *lop = hmLopTimKiem(hmLop, maLop);
+    if (!lop) {
+        printf("[LOI] Khong tim thay lop '%s'.\n", maLop);
+        return;
+    }
+
+    char tenFile[30];
+    snprintf(tenFile, sizeof(tenFile), "sv_lop_%s.csv", maLop);
+
+    FILE *f = fopen(tenFile, "w");
+    if (!f) {
+        printf("[LOI] Khong mo duoc file de ghi: %s\n", tenFile);
+        return;
+    }
+
+    fprintf(f, "MSSV,Ho va ten,Ngay sinh,Email,SDT,Ma lop,GPA\n");
+
+    const SinhVien *sv = lop->danhSachSV;
+    int soLuong = 0;
+    while (sv) {
+        fprintf(f, "%s,%s,%s,%s,%s,%s,%.2f\n",
+                sv->mssv, sv->hoVaTen, sv->ngaySinh,
+                sv->email, sv->sdt, sv->maLop, sv->gpa);
+        soLuong++;
+        sv = sv->next;
+    }
+
+    fclose(f);
+    printf("[OK] Da xuat %d sinh vien cua lop '%s' ra file '%s'.\n",
+           soLuong, maLop, tenFile);
+}
+
+/* ================================================================
+   9. LUU DU LIEU RA FILE
    ================================================================ */
 
 void chucNang_LuuFile(const Lop *headLop)
