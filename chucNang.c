@@ -423,6 +423,7 @@ void chucNang_XuatFileSVTheoLop(HashMapLop *hmLop)
     fclose(f);
     printf("[OK] Da xuat %d sinh vien cua lop '%s' ra file '%s'.\n",
            soLuong, maLop, tenFile);
+    printf("Duong dan tuyet doi cua file la:\n%s\n", _fullpath(NULL,tenFile,_MAX_PATH));
 }
 
 /* ================================================================
